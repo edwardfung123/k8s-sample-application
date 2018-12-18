@@ -1,0 +1,45 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: webui
+  name: webui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: webui
+  template:
+    metadata:
+      labels:
+        run: webui
+    spec:
+      containers:
+      - image: webui:latest
+        imagePullPolicy: IfNotPresent
+        name: webui
+        ports:
+        - containerPort: 80
+          protocol: TCP
+
+---
+
+# APP SERVICE
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: webui
+  name: webui
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: webui
+  type: NodePort
+
