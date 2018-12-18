@@ -1,0 +1,45 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: apis
+  name: apis 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: apis
+  template:
+    metadata:
+      labels:
+        run: apis
+    spec:
+      containers:
+      - image: apis:latest
+        imagePullPolicy: IfNotPresent
+        name: apis
+        ports:
+        - containerPort: 80
+          protocol: TCP
+
+---
+
+# APP SERVICE
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: apis
+  name: apis
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: apis
+  type: NodePort
+
